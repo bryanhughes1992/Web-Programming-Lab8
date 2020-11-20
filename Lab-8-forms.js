@@ -25,31 +25,54 @@ function firePage() {
 	//Do the following when this function is called
 	function processForm() {
 
-		//Alert user that the form has sent
-		alert("Form Sent!");
-
 		//Variable created to store user 'Name'
 		var userName = formHandle.in_Name.value;
-		//Setting the 'name' property of the 'shipInfo' object to the 'userName'
-		shipInfo.name = userName;
+		//Validation of user input for 'Name'
+		if (userName === '' || userName === null) {
+			alert("Please enter your name.");
+			return false;
+		} else {
+			//Setting the 'name' property of the 'shipInfo' object to the 'userName'
+			shipInfo.name = userName;
+			console.log(userName);
+		}
 
 		//Variable to hold the value of the client id input
 		var client_id = formHandle.in_Id.value;
-		//Setting the 'cid' member to user data
-		shipInfo.cid = client_id;
+		var c_id_format = /\d\d\d\d\d\d/;
+		if(client_id === null || !c_id_format.test(client_id) || isNaN(client_id)) {
+			alert("Client ID must be 6 numbers 0-9");
+			return false
+		} else {
+			//Setting the 'cid' member to user data
+			shipInfo.cid = client_id;
+		}
 
 		//Variable to hold user inputted postal code
 		var postalCode = formHandle.in_pc.value;
-		//Setting the 'pc' member of the 'shipInfo' object to 'postalCode'.
-		shipInfo.pc = postalCode;
+		//Regular Expression for postal code
+		var postalCodeFormat = /\w\d\w\s\d\w\d/;
+		//User input validation for postal code
+		if (postalCode === null || !postalCodeFormat.test(postalCode)) {
+			alert("Please enter a Canadian postal code.");
+			return false;
+		} else {
+			//Setting the 'pc' member of the 'shipInfo' object to 'postalCode'.
+			shipInfo.pc = postalCode;
+		}
 
-		var thankYouMsg = `Thank you ${shipInfo.name} (Customer #${shipInfo.cid}) for your purchase. Your package will be sent to ${shipInfo.postalCode}`;
+		//Alert user that the form has sent
+		alert("Form Sent!");
+
 
 		//onSubmit, hide the form.
 		formHandle.style.display = 'none';
 		//Display hard coded thank you message
 		thanksMsg.style.display = 'inline';
 
+		var thankYouMsg = `${shipInfo.name} (Customer #${shipInfo.cid}) for your purchase. Your package will be sent to '${shipInfo.pc}'`;
+		var sendThanks = document.getElementById('thanksCustomer');
+		sendThanks.innerHTML = thankYouMsg;
 
 		//Stop the form from sending
 		return false;
